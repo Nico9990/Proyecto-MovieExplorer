@@ -1,0 +1,22 @@
+:root {
+  --color-fondo: #1A1B25;
+  --color-tarjeta: #242634;
+  --color-acento: #38BDF8;
+  --color-texto-blanco: #FFFFFF;
+  --color-texto-gris: #94A3B8;
+  --color-borde: #33364A;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-fondo);
+  color: var(--color-texto-blanco);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+}
