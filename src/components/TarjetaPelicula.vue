@@ -2,16 +2,19 @@
 defineProps({
   pelicula: Object
 })
+
+const emit = defineEmits(['seleccionar'])
 </script>
 
 <template>
-  <article class="tarjeta">
+  <article class="tarjeta" @click="emit('seleccionar', pelicula)">
     <img
       :src="pelicula.imagen"
       :alt="pelicula.titulo"
       class="tarjeta-imagen"
     />
     <div class="tarjeta-contenido">
+      <span class="tarjeta-tipo">{{ pelicula.tipo }}</span>
       <h3 class="tarjeta-titulo">{{ pelicula.titulo }}</h3>
       <p class="tarjeta-genero">{{ pelicula.genero }}</p>
     </div>
@@ -27,6 +30,7 @@ defineProps({
   transition: transform 0.2s ease, border-color 0.2s ease;
   display: flex;
   flex-direction: column;
+  cursor: pointer;
 }
 
 .tarjeta:hover {
@@ -44,6 +48,14 @@ defineProps({
 
 .tarjeta-contenido {
   padding: 1rem;
+}
+
+.tarjeta-tipo {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #38BDF8;
+  margin-bottom: 0.3rem;
 }
 
 .tarjeta-titulo {

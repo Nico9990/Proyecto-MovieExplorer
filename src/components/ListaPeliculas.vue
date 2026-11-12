@@ -4,12 +4,14 @@ import TarjetaPelicula from './TarjetaPelicula.vue'
 defineProps({
   peliculas: Array
 })
+
+const emit = defineEmits(['seleccionar-pelicula'])
 </script>
 
 <template>
   <section class="lista-peliculas">
     <p v-if="peliculas.length === 0" class="mensaje-vacio">
-      No se encontraron películas o series con ese título.
+      No se encontraron películas o series con esos criterios.
     </p>
 
     <div v-else class="cuadricula-tarjetas">
@@ -17,6 +19,7 @@ defineProps({
         v-for="item in peliculas"
         :key="item.id"
         :pelicula="item"
+        @seleccionar="emit('seleccionar-pelicula', $event)"
       />
     </div>
   </section>

@@ -3,22 +3,40 @@ import { ref, computed } from 'vue'
 import { peliculas } from './data/peliculas.js'
 import AppHeader from './components/AppHeader.vue'
 import BarraBusqueda from './components/BarraBusqueda.vue'
+import FiltrosTipo from './components/FiltrosTipo.vue'
 import ListaPeliculas from './components/ListaPeliculas.vue'
+import DetallePelicula from './components/DetallePelicula.vue'
 
 const busqueda = ref('')
+const tipoFiltro = ref('Todas')
+const seleccionada = ref(null)
 
 function actualizarBusqueda(nuevoTexto) {
   busqueda.value = nuevoTexto
 }
 
+function actualizarTipo(nuevoTipo) {
+  tipoFiltro.value = nuevoTipo
+}
+
+function seleccionarPelicula(pelicula) {
+  seleccionada.value = pelicula
+}
+
+function cerrarDetalle() {
+  seleccionada.value = null
+}
+
 const peliculasFiltradas = computed(() => {
   const texto = busqueda.value.trim().toLowerCase()
-  if (!texto) {
-    return peliculas
-  }
-  return peliculas.filter((pelicula) =>
-    pelicula.titulo.toLowerCase().includes(texto)
-  )
+
+  return peliculas.filter((pelicula) => {
+    const coincideTitulo = pelicula.titulo.toLowerCase().includes(texto)
+    const coincideTipo =
+      tipoFiltro.value === 'Todas' || pelicula.tipo === tipoFiltro.value
+
+    return coincideTitulo && coincideTipo
+  })
 })
 </script>
 
@@ -32,7 +50,21 @@ const peliculasFiltradas = computed(() => {
         @cambiar-busqueda="actualizarBusqueda"
       />
 
-      <ListaPeliculas :peliculas="peliculasFiltradas" />
+      <FiltrosTipo
+        :tipo-actual="tipoFiltro"
+        @cambiar-tipo="actualizarTipo"
+      />
+
+      <ListaPeliculas
+        :peliculas="peliculasFiltradas"
+        @seleccionar-pelicula="seleccionarPelicula"
+      />
+
+      <DetallePelicula
+        v-if="seleccionada"
+        :pelicula="seleccionada"
+        @cerrar="cerrarDetalle"
+      />
     </main>
   </div>
 </template>
