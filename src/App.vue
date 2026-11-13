@@ -6,6 +6,7 @@ import BarraBusqueda from './components/BarraBusqueda.vue'
 import FiltrosTipo from './components/FiltrosTipo.vue'
 import ListaPeliculas from './components/ListaPeliculas.vue'
 import DetallePelicula from './components/DetallePelicula.vue'
+import AppFooter from './components/AppFooter.vue'
 
 const busqueda = ref('')
 const tipoFiltro = ref('Todas')
@@ -97,17 +98,23 @@ const peliculasFiltradas = computed(() => {
         @alternar-favorito="alternarFavorito"
       />
     </main>
+
+    <AppFooter />
   </div>
 </template>
 
 <style scoped>
 .aplicacion {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background-color: #1A1B25;
 }
 
 .contenido-principal {
+  flex: 1;
   max-width: 1200px;
+  width: 100%;
   margin: 0 auto;
   padding: 2rem;
 }
