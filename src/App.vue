@@ -9,7 +9,20 @@ import DetallePelicula from './components/DetallePelicula.vue'
 
 const busqueda = ref('')
 const tipoFiltro = ref('Todas')
+const vista = ref('catalogo')
 const seleccionada = ref(null)
+
+const favoritos = ref(JSON.parse(localStorage.getItem('favoritos')) || [])
+
+function alternarFavorito(peliculaId) {
+  const indice = favoritos.value.indexOf(peliculaId)
+  if (indice === -1) {
+    favoritos.value.push(peliculaId)
+  } else {
+    favoritos.value.splice(indice, 1)
+  }
+  localStorage.setItem('favoritos', JSON.stringify(favoritos.value))
+}
 
 function actualizarBusqueda(nuevoTexto) {
   busqueda.value = nuevoTexto
@@ -17,6 +30,10 @@ function actualizarBusqueda(nuevoTexto) {
 
 function actualizarTipo(nuevoTipo) {
   tipoFiltro.value = nuevoTipo
+}
+
+function cambiarVista(nuevaVista) {
+  vista.value = nuevaVista
 }
 
 function seleccionarPelicula(pelicula) {
@@ -30,7 +47,12 @@ function cerrarDetalle() {
 const peliculasFiltradas = computed(() => {
   const texto = busqueda.value.trim().toLowerCase()
 
-  return peliculas.filter((pelicula) => {
+  const base =
+    vista.value === 'favoritos'
+      ? peliculas.filter((pelicula) => favoritos.value.includes(pelicula.id))
+      : peliculas
+
+  return base.filter((pelicula) => {
     const coincideTitulo = pelicula.titulo.toLowerCase().includes(texto)
     const coincideTipo =
       tipoFiltro.value === 'Todas' || pelicula.tipo === tipoFiltro.value
@@ -42,7 +64,11 @@ const peliculasFiltradas = computed(() => {
 
 <template>
   <div class="aplicacion">
-    <AppHeader />
+    <AppHeader
+      :vista-actual="vista"
+      :cantidad-favoritos="favoritos.length"
+      @cambiar-vista="cambiarVista"
+    />
 
     <main class="contenido-principal">
       <BarraBusqueda
@@ -57,13 +83,18 @@ const peliculasFiltradas = computed(() => {
 
       <ListaPeliculas
         :peliculas="peliculasFiltradas"
+        :favoritos="favoritos"
+        :vista="vista"
         @seleccionar-pelicula="seleccionarPelicula"
+        @alternar-favorito="alternarFavorito"
       />
 
       <DetallePelicula
         v-if="seleccionada"
         :pelicula="seleccionada"
+        :es-favorito="favoritos.includes(seleccionada.id)"
         @cerrar="cerrarDetalle"
+        @alternar-favorito="alternarFavorito"
       />
     </main>
   </div>

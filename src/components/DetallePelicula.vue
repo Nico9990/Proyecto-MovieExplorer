@@ -1,9 +1,10 @@
 <script setup>
 defineProps({
-  pelicula: Object
+  pelicula: Object,
+  esFavorito: Boolean
 })
 
-const emit = defineEmits(['cerrar'])
+const emit = defineEmits(['cerrar', 'alternar-favorito'])
 </script>
 
 <template>
@@ -37,6 +38,16 @@ const emit = defineEmits(['cerrar'])
             <h3>Sinopsis</h3>
             <p>{{ pelicula.sinopsis }}</p>
           </div>
+
+          <button
+            type="button"
+            class="boton-favorito-detalle"
+            :class="{ activo: esFavorito }"
+            @click="emit('alternar-favorito', pelicula.id)"
+          >
+            <span class="icono-favorito-detalle">{{ esFavorito ? '❤️' : '🤍' }}</span>
+            <span>{{ esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos' }}</span>
+          </button>
         </div>
       </div>
     </section>
@@ -143,6 +154,35 @@ const emit = defineEmits(['cerrar'])
 .detalle-sinopsis p {
   color: #FFFFFF;
   line-height: 1.6;
+}
+
+.boton-favorito-detalle {
+  margin-top: 1.25rem;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  background-color: #1A1B25;
+  border: 1px solid #33364A;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.boton-favorito-detalle:hover {
+  border-color: #EF4444;
+}
+
+.boton-favorito-detalle.activo {
+  background-color: #EF4444;
+  border-color: #EF4444;
+}
+
+.icono-favorito-detalle {
+  font-size: 1.1rem;
 }
 
 @media (max-width: 600px) {

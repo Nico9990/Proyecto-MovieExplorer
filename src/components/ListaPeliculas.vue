@@ -2,16 +2,31 @@
 import TarjetaPelicula from './TarjetaPelicula.vue'
 
 defineProps({
-  peliculas: Array
+  peliculas: {
+    type: Array,
+    default: () => []
+  },
+  favoritos: {
+    type: Array,
+    default: () => []
+  },
+  vista: {
+    type: String,
+    default: 'catalogo'
+  }
 })
 
-const emit = defineEmits(['seleccionar-pelicula'])
+const emit = defineEmits(['seleccionar-pelicula', 'alternar-favorito'])
 </script>
 
 <template>
   <section class="lista-peliculas">
     <p v-if="peliculas.length === 0" class="mensaje-vacio">
-      No se encontraron películas o series con esos criterios.
+      {{
+        vista === 'favoritos'
+          ? 'Aún no has agregado ninguna película o serie a tus favoritos.'
+          : 'No se encontraron películas o series con esos criterios.'
+      }}
     </p>
 
     <div v-else class="cuadricula-tarjetas">
@@ -19,7 +34,9 @@ const emit = defineEmits(['seleccionar-pelicula'])
         v-for="item in peliculas"
         :key="item.id"
         :pelicula="item"
+        :es-favorito="favoritos.includes(item.id)"
         @seleccionar="emit('seleccionar-pelicula', $event)"
+        @alternar-favorito="emit('alternar-favorito', $event)"
       />
     </div>
   </section>
